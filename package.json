@@ -1,0 +1,38 @@
+{
+  "dependencies": {
+    "advertising-api": "file:",
+    "bcrypt": "^5.1.1",
+    "dotenv": "^16.4.7",
+    "express": "^4.21.2",
+    "express-jwt": "^8.5.1",
+    "joi": "^17.13.3",
+    "jsonwebtoken": "^9.0.2",
+    "mongoose": "^8.12.1",
+    "multer": "^1.4.5-lts.2",
+    "multer-savefilesorg": "^1.0.2",
+    "nodemailer": "^6.10.0",
+    "nodemon": "^3.1.9",
+    "normalize-mongoose": "^1.0.0"
+  },
+  "name": "advertising-api",
+  "version": "1.0.0",
+  "main": "index.js",
+  "type": "module",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "dev": "nodemon --env-file=.env .",
+    "start": "node ."
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/jepp-x/advertising-api.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/jepp-x/advertising-api/issues"
+  },
+  "homepage": "https://github.com/jepp-x/advertising-api#readme",
+  "description": ""
+}
