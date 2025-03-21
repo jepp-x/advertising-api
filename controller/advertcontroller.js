@@ -2,7 +2,7 @@
 // POST or add advert
 
 
-// GET/view all advert
+// GET/view all advert with search and filter 
 
 
 // GET one advert 
@@ -14,7 +14,9 @@
 // PUT/replace advert
 
 
-// DELET advert
+// DELET advert  [add logic to save all an activity log]
 
 
-// [view deleted advert]
+// [get/ view deleted advert]
+
+// restore deleted adds
