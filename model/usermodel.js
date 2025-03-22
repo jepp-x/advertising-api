@@ -7,7 +7,11 @@ const userSchema = new Schema({
     lastName: { type: String, required: true },
     email: { type: String, required: true, unique: true },
     password: { type: String, requires: true },
-    // role: { type: String, default: }
+    role: {
+        type: String,
+        enum: ['user', 'vendor'],
+        default: 'user' // Set to default value if not specified. Check uservalidator/validator.js for more explaination.
+    }
 }, {
     timestamps: true
 });
