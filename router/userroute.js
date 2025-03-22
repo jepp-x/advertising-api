@@ -9,25 +9,13 @@ import {
 // Create user router
 const userRouter = Router();
 
-// Define routes 
-
+// Define routes
 
 userRouter.post("/users/login", loginUser);
 
 userRouter.post("/users/signup", registerUser);
 
-
-
 userRouter.patch("/users/:id", updateUser);
 
 // Export router
 export default userRouter;
-
-
-
-
-
-
-
-
-
