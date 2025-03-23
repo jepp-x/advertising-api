@@ -1,18 +1,19 @@
 import { Router } from "express";
 import { addAdvert, deleteAdvert, getAdverts, getOneAdvert, permanentlyDeleteAdverts, replaceAdvert, restoreAdverts, updateAdvert, viewDeletedAdverts } from "../controller/advertcontroller.js";
 import { advertPicturesUpload } from "../middleware/upload.js";
+import { isAuthenticated } from "../middleware/auth.js";
 
 
 const advertRouter = Router();
 
 // create adds advertPicturesUpload.array("pictures", 3),
-advertRouter.post("/adverts", addAdvert)
+advertRouter.post("/adverts",isAuthenticated, checAdminORVendor, addAdvert)
 
 // update adds
-advertRouter.patch("/adverts/:id", updateAdvert)
+advertRouter.patch("/adverts/:id", isAuthenticated, checAdminORVendor,updateAdvert)
 
 // replace adds
-advertRouter.put("/adverts/:id", replaceAdvert)
+advertRouter.put("/adverts/:id",isAuthenticated, checAdminORVendor, replaceAdvert)
 
 // view all adds
 advertRouter.get("/adverts", getAdverts)
@@ -22,19 +23,17 @@ advertRouter.get("/adverts", getAdverts)
 advertRouter.get("/adverts/:id", getOneAdvert)
 
 // delete adds
-advertRouter.delete("/adverts/:id", deleteAdvert)
+advertRouter.delete("/adverts/:id",isAuthenticated, checAdminORVendor, deleteAdvert)
 
 //view deleted adds
-advertRouter.get("/adverts-deleted", viewDeletedAdverts)
+advertRouter.get("/adverts-deleted", isAuthenticated, checAdminORVendor,viewDeletedAdverts)
 
 // restore mistaken deleted add [put]
-advertRouter.put("/adverts-restore/:id", restoreAdverts)
+advertRouter.put("/adverts-restore/:id",isAuthenticated, checAdminORVendor, restoreAdverts)
 
 //delete adds permanently fron trash
-advertRouter.delete("/adverts-delete/:id", permanentlyDeleteAdverts)
+advertRouter.delete("/adverts-delete/:id",isAuthenticated, checAdminOnly, permanentlyDeleteAdverts)
 
 // log action details on deletion [admin and superadmin only]
-
-// 
 
 export default advertRouter

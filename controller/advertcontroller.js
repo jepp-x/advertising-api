@@ -4,45 +4,45 @@ import { advertIdValidator, advertValidator, updateAdvertValidator } from "../va
 
 // POST or add advert
 export const addAdvert = async (req, res, next) => {
-try {
-    const {error, value} = advertValidator.validate(req.body)
-    //     {
-    //     ...req.body, 
-    //     pictures: req.files?.map((file) => {
-    //         return file.filename
-    //     })
-    // }, {abortEarly: false});
-    if (error) {
-        return res.status(422).json(error);
+    try {
+        const { error, value } = advertValidator.validate({
+            ...req.body,
+            pictures:req.files?.map((file) => {
+                return file.filename
+            })
+        },{abortEarly:false});
+        if (error) {
+            return res.status(422).json(error);
+        }
+        // save advert details 
+        const result = await AdvertModel.create({
+            ...value,
+            // userId: req.auth.id
+        })
+        return res.status(201).json(result)
+    } catch (error) {
+        if (error.name === "MongooseError") {
+            return res.status(409).json(error.message)
+        }
+        next(error)
     }
-    const result = await AdvertModel.create({
-        ...value,
-        // userId: req.auth.id
-    })
-    return res.status(201).json(result)
-} catch (error) {
-    if(error.name === "MongooseError") {
-        return res.status(409).json(error.message)
-    }
-    next(error)
-}
 };
 
 
 
 // GET/view all advert with search and filter 
 export const getAdverts = async (req, res, next) => {
-try {
-    const { filter = "{}", sort = "{}" } = req.body;
+    try {
+        const { filter = "{}", sort = "{}" } = req.body;
 
-    const result = await AdvertModel
-    .find({ ...JSON.parse(filter), isDeleted: false })
-    .sort(JSON.parse(sort));
+        const result = await AdvertModel
+            .find({ ...JSON.parse(filter), isDeleted: false })
+            .sort(JSON.parse(sort));
 
-    res.json(result)
-} catch (error) {
-    next(error)
-}
+        res.json(result)
+    } catch (error) {
+        next(error)
+    }
 };
 
 
@@ -54,7 +54,7 @@ export const getOneAdvert = async (req, res, next) => {
             return res.status(400).json(error)
         }
         const result = await AdvertModel.findById(value.id)
-        if(!result) {
+        if (!result) {
             return res.status(404).json({ message: "Advert not found" })
         }
         res.json(result)
@@ -67,12 +67,12 @@ export const getOneAdvert = async (req, res, next) => {
 // Patch/update advert
 export const updateAdvert = async (req, res, next) => {
     try {
-        const {error, value} = updateAdvertValidator.validate(req.body, {abortEarly: false})
+        const { error, value } = updateAdvertValidator.validate(req.body, { abortEarly: false })
         if (error) {
             return res.status(400).json(error)
         }
-        const result = await AdvertModel.findByIdAndUpdate(req.params.id, value, {new: true} )
-        if(!result) {
+        const result = await AdvertModel.findByIdAndUpdate(req.params.id, value, { new: true })
+        if (!result) {
             return res.status(404).json("Advert not found")
         }
         res.status(200).json({
@@ -87,12 +87,12 @@ export const updateAdvert = async (req, res, next) => {
 // PUT/replace advert
 export const replaceAdvert = async (req, res, next) => {
     try {
-        const {error, value} = advertValidator.validate(req.body, {abortEarly: false})
+        const { error, value } = advertValidator.validate(req.body, { abortEarly: false })
         if (error) {
             return res.status(400).json(error)
         }
-        const result = await AdvertModel.findByIdAndUpdate(req.params.id, value, {new: true} )
-        if(!result) {
+        const result = await AdvertModel.findByIdAndUpdate(req.params.id, value, { new: true })
+        if (!result) {
             return res.status(404).json("Advert not found")
         }
         res.status(201).json({
@@ -107,16 +107,16 @@ export const replaceAdvert = async (req, res, next) => {
 // DELETE advert  [add logic to save all an activity log]
 export const deleteAdvert = async (req, res, next) => {
     try {
-        const { error, value } = advertIdValidator.validate(req.params, {abortEarly: false} )
+        const { error, value } = advertIdValidator.validate(req.params, { abortEarly: false })
         if (error) {
             return res.status(400).json(error)
         }
         const result = await AdvertModel.findByIdAndUpdate(
-            value.id, 
-            {isDeleted: true, deletedAt: new Date() }, 
-            {new: true}
+            value.id,
+            { isDeleted: true, deletedAt: new Date() },
+            { new: true }
         )
-        if(!result) {
+        if (!result) {
             return res.status(404).json("Advert not found")
         }
         res.status(201).json({
@@ -125,7 +125,7 @@ export const deleteAdvert = async (req, res, next) => {
         })
 
     } catch (error) {
-      next(error)  
+        next(error)
     }
 }
 
@@ -134,21 +134,21 @@ export const viewDeletedAdverts = async (req, res, next) => {
     try {
         // const userId = req.user.id
         const result = await AdvertModel.find({ isDeleted: true })
-        if (result.length === 0 ) {
-            return res.status(404).json({message: "No deleted adverts found"})
+        if (result.length === 0) {
+            return res.status(404).json({ message: "No deleted adverts found" })
         }
-        res.status(201).json({message: "Here are your deleted messages", data: result})
+        res.status(201).json({ message: "Here are your deleted messages", data: result })
     } catch (error) {
         next(error)
     }
 }
 
 // restore deleted adds
-export const restoreAdverts = async ( req, res, next ) => {
+export const restoreAdverts = async (req, res, next) => {
     try {
-        const result = await AdvertModel.findByIdAndUpdate(req.params.id, {isDeleted: false}, {new: true})
+        const result = await AdvertModel.findByIdAndUpdate(req.params.id, { isDeleted: false }, { new: true })
         if (!result) {
-            return res.status(404).json({message: "Advert not found"})
+            return res.status(404).json({ message: "Advert not found" })
         }
         res.status(201).json({
             message: "Advert suceesfully restored",
@@ -164,7 +164,7 @@ export const permanentlyDeleteAdverts = async (req, res, next) => {
     try {
         const result = await AdvertModel.findByIdAndDelete(req.params.id)
         if (!result) {
-            return res.status(404).json({message: "Advert not found"})
+            return res.status(404).json({ message: "Advert not found" })
         }
         res.status(201).json({
             message: "Advert permanently deleted",
