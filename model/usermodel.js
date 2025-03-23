@@ -1,3 +1,4 @@
+import { json } from "express";
 import mongoose, { model, Schema } from "mongoose";
 import normalize from "normalize-mongoose"
 
@@ -9,13 +10,23 @@ const userSchema = new Schema({
     password: { type: String, requires: true },
     role: {
         type: String,
-        enum: ['user', 'vendor'],
+        enum: ['user', 'vendor','admin'],
         default: 'user' // Set to default value if not specified. Check uservalidator/validator.js for more explaination.
     }
 }, {
     timestamps: true
 });
 
-userSchema.plugin(normalize)
+
+
+userSchema.set("toJSON", {
+    transform: (document,returned0bject) =>{
+        returned0bject.id = returned0bject._id.toString()
+        delete returned0bject._id
+        delete returned0bject._v
+    }
+})
+
+// userSchema.plugin(normalize)
 
 export const userModel = model("user", userSchema);

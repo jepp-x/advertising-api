@@ -5,8 +5,6 @@ import {
   updateUser,
 } from "../controller/usercontroller.js";
 
-// create user [sign ups]
-// Create user router
 const userRouter = Router();
 
 // Define routes

@@ -1,23 +1,37 @@
-
-//admin access [post get put patch delete  getLogs]
-//vendor access [post get put patch delete ]
-//client access [ get]
-
-
-
-
-
+import { userModel } from '../model/usermodel.js'
+import { expressjwt } from 'express-jwt'
 
 // authenticate user  at signup/register
+export const isAuthenticated = expressjwt({
+    secret: process.env.JWT_SECRET_KEY,
+    algorithms: ["HS256"]
+});
 
+export const isAuthorized = (roles) => {
+    return async (req, res, next) => {
+        const user = await userModel.findById(req.auth.id);
 
-// authenticate user  at login
+        if (roles?.includes(user.role)) {
+            next();
+        } else {
+            res.status(403).json("You have to be Authorized")
+        }
+    }
+}
 
-
-
-
-
-
-
-// authorize user (vendor to add and delete advert)
-
+//vendorand admin access [post get put patch delete ]
+const checkAdminOrVendor = (req, res, next) => {
+    if (req.user && (req.user.role == 'admin' || req.user.role == 'vendor')) {
+        next();
+    } else {
+        res.status(403).json({ message: 'Access Denined!, Only Admin or Vendor' });
+    }
+}
+//admin Only to delete prmanently 
+const checAdminOnly = (req, res, next) => {
+    if(req.user && req.user.role == 'admin') {
+        next(); //allow access
+    }else {
+        res.status(403).json({message:'Access denied!, Amins only'})
+    }
+};

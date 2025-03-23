@@ -15,7 +15,8 @@ export const registerUser = async (req, res, next) => {
     // Check if user does not exist already
     const user = await userModel.findOne({
         $or: [
-            { email: value.email },
+            { username: value.username },
+            { email: value.email }
         ]
     });
 
@@ -39,6 +40,8 @@ export const registerUser = async (req, res, next) => {
         `Hello ${newUser.userName}, You are welcome`)
 
     // (optionally) Generate access token for user
+    // const token = jwt.sign({ _id: user._id },  process.env.JWT_SECRET_KEY);
+    // res.status(201).json({user,token});
 
     // Return response
     res.status(201).json('User registered successfully')
@@ -56,7 +59,8 @@ export const loginUser = async (req, res, next) => {
     // Find matching user record in database
     const user = await userModel.findOne({
         $or: [
-            { email: value.email },
+            {username: value.username},
+            { email: value.email }
         ]
     });
     if (!user) {
@@ -70,6 +74,10 @@ export const loginUser = async (req, res, next) => {
     }
 
     // Generate access token for user(role will be assinged to only the vendor)
+    const accessToken = jwt.sign({id: user.id},
+        process.env.JWT_SECRET_KEY,
+        {expiresIn: "24h"}
+    )
 
 
     // Return response
@@ -101,7 +109,6 @@ export const updateUser = async (req, res, next) => {
     );
 
     // if user is not found
-
     if (!up) {
         return res.status(404).json({ message: 'User not found' });
     }
