@@ -7,12 +7,12 @@ export const addAdvert = async (req, res) => {
     try {
         const { error, value } = advertValidator.validate({
             ...req.body,
-            pictures:req.files?.map((file) => {
+            pictures: req.files?.map((file) => {
                 return file.filename
             })
-        },{abortEarly:false});
+        }, { abortEarly: false });
         if (error) {
-            return res.status(422).json(error);
+            return res.status(422).json({ message: "Validation Unsuccessful", status: "error" });
         }
         // save advert details 
         const result = await AdvertModel.create({
@@ -22,16 +22,16 @@ export const addAdvert = async (req, res) => {
         return res.status(201).json(result)
     } catch (error) {
         if (error.name === "MongooseError") {
-            return res.status(409).json(error.message)
+            return res.status(409).json({ message: "Request not successful, Internal server error", status: "error" })
         }
-        return res.status({message:'Pot Not Successful!'})
+        return res.json({ message: "Request not successful, kindly refresh your application", status: "error" })
     }
 };
 
 
 
 // GET/view all advert with search and filter 
-export const getAdverts = async (req, res, next) => {
+export const getAdverts = async (req, res) => {
     try {
         const { filter = "{}", sort = "{}" } = req.body;
 
@@ -41,17 +41,17 @@ export const getAdverts = async (req, res, next) => {
 
         res.json(result)
     } catch (error) {
-        next(error)
+        return res.json({ message: "Request not successful, kindly refresh your application", status: "error" })
     }
 };
 
 
 // GET one advert 
-export const getOneAdvert = async (req, res, next) => {
+export const getOneAdvert = async (req, res) => {
     try {
         const { error, value } = advertIdValidator.validate(req.params, { abortEarly: false })
         if (error) {
-            return res.status(400).json(error)
+            return res.status(400).json({ message: "Validation Unsuccessful", status: "error" })
         }
         const result = await AdvertModel.findById(value.id)
         if (!result) {
@@ -59,7 +59,7 @@ export const getOneAdvert = async (req, res, next) => {
         }
         res.json(result)
     } catch (error) {
-        next(error)
+        return res.json({ message: "Request not successful, kindly refresh your application", status: "error" })
     }
 };
 
@@ -69,19 +69,19 @@ export const updateAdvert = async (req, res) => {
     try {
         const { error, value } = updateAdvertValidator.validate(req.body, { abortEarly: false })
         if (error) {
-            return res.status(400).json(error)
+            return res.status(400).json({ message: "Validation Unsuccessful", status: "error" })
         }
         const result = await AdvertModel.findByIdAndUpdate(req.params.id, value, { new: true })
         if (!result) {
-            return res.json({message:"Advert not found", status:'error'})
+            return res.json({ message: "Advert not found", status: 'error' })
         }
         res.status(200).json({
             message: "Advert successfully updated",
             data: result,
-            status:'success'
+            status: 'success'
         })
     } catch (error) {
-        return res.json({message:'Update Not Successful!',statu:'error'})
+        return res.json({ message: "Request not successful, kindly refresh your application", status: "error" })
     }
 }
 
@@ -90,7 +90,7 @@ export const replaceAdvert = async (req, res) => {
     try {
         const { error, value } = advertValidator.validate(req.body, { abortEarly: false })
         if (error) {
-            return res.status(400).json(error)
+            return res.status(400).json({ message: "Validation Unsuccessful", status: "error" })
         }
         const result = await AdvertModel.findByIdAndUpdate(req.params.id, value, { new: true })
         if (!result) {
@@ -101,7 +101,8 @@ export const replaceAdvert = async (req, res) => {
             data: result
         })
     } catch (error) {
-        return res.json({message:'Rplacement Not Successful'})    }
+        return res.json({ message: "Request not successful, kindly refresh your application", status: "error" })
+    }
 }
 
 // DELETE advert  [add logic to save all an activity log]
@@ -109,7 +110,7 @@ export const deleteAdvert = async (req, res) => {
     try {
         const { error, value } = advertIdValidator.validate(req.params, { abortEarly: false })
         if (error) {
-            return res.status(400).json(error)
+            return res.status(400).json({ message: "Validation Unsuccessful", status: "error" })
         }
         const result = await AdvertModel.findByIdAndUpdate(
             value.id,
@@ -126,7 +127,7 @@ export const deleteAdvert = async (req, res) => {
         })
 
     } catch (error) {
-        return res.json({message:'Update Not Successful!',statu:'error'})
+        return res.json({ message: "Request not successful, kindly refresh your application", status: "error" })
     }
 }
 
@@ -140,7 +141,7 @@ export const viewDeletedAdverts = async (req, res) => {
         }
         res.status(201).json({ message: "Here are your deleted messages", data: result })
     } catch (error) {
-        return res.json({message:'Delete Successful!',statu:'error'})
+        return res.json({ message: "Request not successful, kindly refresh your application", status: "error" })
     }
 }
 
@@ -157,7 +158,7 @@ export const restoreAdverts = async (req, res) => {
             status: 'success'
         })
     } catch (error) {
-        return res.json({message:'Restore Not Successful!',statu:'error'})
+        return res.json({ message: "Request not successful, kindly refresh your application", status: "error" })
     }
 }
 
@@ -174,6 +175,6 @@ export const permanentlyDeleteAdverts = async (req, res) => {
             status: 'success'
         })
     } catch (error) {
-        return res.json({message:'Delete Successful!',statu:'error'})
+        return res.json({ message: "Request not successful, kindly refresh your application", status: "error" })
     }
 };
