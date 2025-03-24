@@ -1,19 +1,19 @@
 import { Router } from "express";
 import { addAdvert, deleteAdvert, getAdverts, getOneAdvert, permanentlyDeleteAdverts, replaceAdvert, restoreAdverts, updateAdvert, viewDeletedAdverts } from "../controller/advertcontroller.js";
 import { advertPicturesUpload } from "../middleware/upload.js";
-import { isAuthenticated } from "../middleware/auth.js";
+import { isAuthenticated, checkAdminOrVendor, checkAdminOnly } from "../middleware/auth.js";
 
 
 const advertRouter = Router();
 
 // create adds advertPicturesUpload.array("pictures", 3),
-advertRouter.post("/adverts",isAuthenticated, checAdminORVendor, addAdvert)
+advertRouter.post("/adverts",isAuthenticated,checkAdminOrVendor,addAdvert)
 
 // update adds
-advertRouter.patch("/adverts/:id", isAuthenticated, checAdminORVendor,updateAdvert)
+advertRouter.patch("/adverts/:id", isAuthenticated, checkAdminOrVendor,updateAdvert)
 
 // replace adds
-advertRouter.put("/adverts/:id",isAuthenticated, checAdminORVendor, replaceAdvert)
+advertRouter.put("/adverts/:id",isAuthenticated, checkAdminOrVendor, replaceAdvert)
 
 // view all adds
 advertRouter.get("/adverts", getAdverts)
@@ -23,16 +23,16 @@ advertRouter.get("/adverts", getAdverts)
 advertRouter.get("/adverts/:id", getOneAdvert)
 
 // delete adds
-advertRouter.delete("/adverts/:id",isAuthenticated, checAdminORVendor, deleteAdvert)
+advertRouter.delete("/adverts/:id",isAuthenticated, checkAdminOrVendor, deleteAdvert)
 
 //view deleted adds
-advertRouter.get("/adverts-deleted", isAuthenticated, checAdminORVendor,viewDeletedAdverts)
+advertRouter.get("/adverts-deleted", isAuthenticated, checkAdminOrVendor,viewDeletedAdverts)
 
 // restore mistaken deleted add [put]
-advertRouter.put("/adverts-restore/:id",isAuthenticated, checAdminORVendor, restoreAdverts)
+advertRouter.put("/adverts-restore/:id",isAuthenticated, checkAdminOrVendor, restoreAdverts)
 
 //delete adds permanently fron trash
-advertRouter.delete("/adverts-delete/:id",isAuthenticated, checAdminOnly, permanentlyDeleteAdverts)
+advertRouter.delete("/adverts-delete/:id",isAuthenticated, checkAdminOnly, permanentlyDeleteAdverts)
 
 // log action details on deletion [admin and superadmin only]
 

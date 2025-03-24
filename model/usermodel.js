@@ -1,5 +1,5 @@
 import { json } from "express";
-import mongoose, { model, Schema } from "mongoose";
+import { model, Schema } from "mongoose";
 import normalize from "normalize-mongoose"
 
 // regular user and vendor schemas
@@ -19,14 +19,14 @@ const userSchema = new Schema({
 
 
 
-userSchema.set("toJSON", {
-    transform: (document,returned0bject) =>{
-        returned0bject.id = returned0bject._id.toString()
-        delete returned0bject._id
-        delete returned0bject._v
-    }
-})
+// userSchema.set("toJSON", {
+//     transform: (document,returned0bject) =>{
+//         returned0bject.id = returned0bject._id.toString()
+//         delete returned0bject._id
+//         delete returned0bject._v
+//     }
+// })
 
-// userSchema.plugin(normalize)
+userSchema.plugin(normalize)
 
 export const userModel = model("user", userSchema);
