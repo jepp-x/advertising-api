@@ -39,8 +39,8 @@ export const registerUser = async (req, res) => {
     await newUser.save();
 
     // Send registration email to user
-    // const sendWelcomeEmail = await sendEmail(newUser.email, "Welcome to Adverts",
-    //     `Hello ${newUser.userName}, You are welcome`)
+    const sendWelcomeEmail = await sendEmail(newUser.email, "Welcome to Jeppx Advertisement!",
+        `Hello ${newUser.userName}`)
 
     // Return response
     res.status(201).json('User registered successfully')
@@ -108,7 +108,10 @@ export const updateUser = async (req, res) => {
         }
         // Return response without password
         const {password, ...userWithoutPassword} =updatedUser.toObject();
-        res.status(200).json(userWithoutPassword); // This will not return with the password.
+        res.status(200).json({
+            message: "Update successful",
+            data: userWithoutPassword
+        }); // This will not return with the password.
     } catch (error) {
         res.status(500).json({message:'Update User, Server Error'})
     }

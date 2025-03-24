@@ -6,7 +6,7 @@ export const registerUserValidator = Joi.object({
     email: Joi.string().email({ minDomainSegments: 2, tlds: { allow: ['com', 'net'] } }).required(),
     password: Joi.string().required(),
     confirmPassword: Joi.string().valid(Joi.ref('password')),
-    role: Joi.string().valid('user', 'vendor', 'admin').optional() //Role is optional, default to 'user' if not set/chosen/selected
+    role: Joi.string().valid('user', 'vendor').optional() //Role is optional, default to 'user' if not set/chosen/selected
 }).with("password", "confirmPassword");
 
 export const loginUserValidator = Joi.object({
@@ -20,5 +20,5 @@ export const updateUserValidator = Joi.object({
     email: Joi.string().optional(),
     password: Joi.string().optional(),
     confirmPassword: Joi.ref('password'),
-    role: Joi.string().valid('user', 'vendor', 'admin').optional(),
+    role: Joi.string().valid('user', 'vendor').optional(),
 })
