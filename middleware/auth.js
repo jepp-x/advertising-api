@@ -24,7 +24,7 @@ export const checkAdminOrVendor = (req, res, next) => {
     if (req.user && (req.user.role == 'admin' || req.user.role == 'vendor')) {
         next();
     } else {
-        res.status(403).json({ message: 'Access Denined!, Only Admin or Vendor' });
+        res.status(403).json({ message: 'Access Denined!, Only Admin or Vendor allowed', status:'error' });
     }
 };
 //admin Only to delete prmanently 
@@ -32,6 +32,6 @@ export const checkAdminOnly = (req, res, next) => {
     if(req.user && req.user.role == 'admin') {
         next(); //allow access
     }else {
-        return res.json({message:'Access denied!, Amins only', status:'error'})
+        return res.json({message:'Access denied!, only Admins are allowed', status:'error'})
     }
 };

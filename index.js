@@ -1,4 +1,5 @@
 import express from 'express';
+import cors from "cors";
 import advertRouter from './router/advertroute.js';
 import mongoose from 'mongoose';
 import userRouter from './router/userroute.js';
@@ -15,6 +16,8 @@ const app = express();
 
 // use midlewares
 app.use(express.json());
+
+app.use(cors());
 
 // user routers
 app.use(advertRouter);
