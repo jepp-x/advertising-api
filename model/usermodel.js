@@ -18,14 +18,14 @@ const userSchema = new Schema({
 
 
 
-// userSchema.set("toJSON", {
-//     transform: (document,returned0bject) =>{
-//         returned0bject.id = returned0bject._id.toString()
-//         delete returned0bject._id
-//         delete returned0bject._v
-//     }
-// })
+userSchema.set("toJSON", {
+    transform: (document,returned0bject) =>{
+        returned0bject.id = returned0bject._id.toString()
+        delete returned0bject._id
+        delete returned0bject.__v
+    }
+})
 
-userSchema.plugin(normalize)
+// userSchema.plugin(normalize)
 
 export const userModel = model("user", userSchema);
