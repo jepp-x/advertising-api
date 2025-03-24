@@ -3,7 +3,7 @@ import { advertIdValidator, advertValidator, updateAdvertValidator } from "../va
 
 
 // POST or add advert
-export const addAdvert = async (req, res, next) => {
+export const addAdvert = async (req, res) => {
     try {
         const { error, value } = advertValidator.validate({
             ...req.body,
@@ -24,7 +24,7 @@ export const addAdvert = async (req, res, next) => {
         if (error.name === "MongooseError") {
             return res.status(409).json(error.message)
         }
-        next(error)
+        return res.status({message:'Pot Not Successful!'})
     }
 };
 
@@ -65,7 +65,7 @@ export const getOneAdvert = async (req, res, next) => {
 
 
 // Patch/update advert
-export const updateAdvert = async (req, res, next) => {
+export const updateAdvert = async (req, res) => {
     try {
         const { error, value } = updateAdvertValidator.validate(req.body, { abortEarly: false })
         if (error) {
@@ -73,19 +73,20 @@ export const updateAdvert = async (req, res, next) => {
         }
         const result = await AdvertModel.findByIdAndUpdate(req.params.id, value, { new: true })
         if (!result) {
-            return res.status(404).json("Advert not found")
+            return res.json({message:"Advert not found", status:'error'})
         }
         res.status(200).json({
             message: "Advert successfully updated",
-            data: result
+            data: result,
+            status:'success'
         })
     } catch (error) {
-        next(error)
+        return res.json({message:'Update Not Successful!',statu:'error'})
     }
 }
 
 // PUT/replace advert
-export const replaceAdvert = async (req, res, next) => {
+export const replaceAdvert = async (req, res) => {
     try {
         const { error, value } = advertValidator.validate(req.body, { abortEarly: false })
         if (error) {
@@ -100,12 +101,11 @@ export const replaceAdvert = async (req, res, next) => {
             data: result
         })
     } catch (error) {
-        next(error)
-    }
+        return res.json({message:'Rplacement Not Successful'})    }
 }
 
 // DELETE advert  [add logic to save all an activity log]
-export const deleteAdvert = async (req, res, next) => {
+export const deleteAdvert = async (req, res) => {
     try {
         const { error, value } = advertIdValidator.validate(req.params, { abortEarly: false })
         if (error) {
@@ -121,16 +121,17 @@ export const deleteAdvert = async (req, res, next) => {
         }
         res.status(201).json({
             message: "Advert deleted!",
-            data: result
+            data: result,
+            status: 'successful'
         })
 
     } catch (error) {
-        next(error)
+        return res.json({message:'Update Not Successful!',statu:'error'})
     }
 }
 
 // [get/ view deleted advert]  user: userId
-export const viewDeletedAdverts = async (req, res, next) => {
+export const viewDeletedAdverts = async (req, res) => {
     try {
         // const userId = req.user.id
         const result = await AdvertModel.find({ isDeleted: true })
@@ -139,12 +140,12 @@ export const viewDeletedAdverts = async (req, res, next) => {
         }
         res.status(201).json({ message: "Here are your deleted messages", data: result })
     } catch (error) {
-        next(error)
+        return res.json({message:'Delete Successful!',statu:'error'})
     }
 }
 
 // restore deleted adds
-export const restoreAdverts = async (req, res, next) => {
+export const restoreAdverts = async (req, res) => {
     try {
         const result = await AdvertModel.findByIdAndUpdate(req.params.id, { isDeleted: false }, { new: true })
         if (!result) {
@@ -152,15 +153,16 @@ export const restoreAdverts = async (req, res, next) => {
         }
         res.status(201).json({
             message: "Advert suceesfully restored",
-            data: result
+            data: result,
+            status: 'success'
         })
     } catch (error) {
-        next(error)
+        return res.json({message:'Restore Not Successful!',statu:'error'})
     }
 }
 
 //delete adverts permanently
-export const permanentlyDeleteAdverts = async (req, res, next) => {
+export const permanentlyDeleteAdverts = async (req, res) => {
     try {
         const result = await AdvertModel.findByIdAndDelete(req.params.id)
         if (!result) {
@@ -168,9 +170,10 @@ export const permanentlyDeleteAdverts = async (req, res, next) => {
         }
         res.status(201).json({
             message: "Advert permanently deleted",
-            data: result
+            data: result,
+            status: 'success'
         })
     } catch (error) {
-        next(error)
+        return res.json({message:'Delete Successful!',statu:'error'})
     }
 };

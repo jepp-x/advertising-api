@@ -1,7 +1,7 @@
 import express from 'express';
 import advertRouter from './router/advertroute.js';
 import mongoose from 'mongoose';
-// import userRouter from './router/userroute.js';
+import userRouter from './router/userroute.js';
 
 
 
@@ -18,7 +18,7 @@ app.use(express.json());
 
 // user routers
 app.use(advertRouter);
-// app.use(userRouter)
+app.use(userRouter)
 
 
 // listening port
