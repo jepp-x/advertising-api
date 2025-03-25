@@ -17,21 +17,4 @@ export const isAuthorized = (roles) => {
             res.status(403).json("You have to be Authorized")
         }
     }
-}
-
-//vendorand admin access [post get put patch delete ]
-export const checkAdminOrVendor = (req, res, next) => {
-    if (req.user && (req.user.role == 'admin' || req.user.role == 'vendor')) {
-        next();
-    } else {
-        res.status(403).json({ message: 'Access Denined!, Only Admin or Vendor allowed', status:'error' });
-    }
-};
-//admin Only to delete prmanently 
-export const checkAdminOnly = (req, res, next) => {
-    if(req.user && req.user.role == 'admin') {
-        next(); //allow access
-    }else {
-        return res.json({message:'Access denied!, only Admins are allowed', status:'error'})
-    }
 };
