@@ -1,4 +1,5 @@
 import { userModel } from "../model/usermodel.js";
+import { emailMessage, mailTransporter } from "../utils/mailing.js";
 import { loginUserValidator, registerUserValidator, updateUserValidator } from "../validator/uservalidator.js";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken"
@@ -39,8 +40,14 @@ export const registerUser = async (req, res) => {
     await newUser.save();
 
     // Send registration email to user
-    const sendWelcomeEmail = await sendEmail(newUser.email, "Welcome to Jeppx Advertisement!",
-        `Hello ${newUser.userName}`)
+    // const sendWelcomeEmail = await sendEmail(newUser.email, "Welcome to Jeppx Advertisement!",
+    //     `Hello ${newUser.userName}`)
+    await mailTransporter.sendMail({
+        from: process.env.USER_EMAIL,
+        to: value.email,
+        subject: "Welcome to Jeppx Advertisement",
+        html: emailMessage.replace("{{lastName}}", value.lastName)
+    })
 
     // Return response
     res.status(201).json('User registered successfully')
