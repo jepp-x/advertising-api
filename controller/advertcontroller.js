@@ -12,12 +12,15 @@ export const addAdvert = async (req, res) => {
             })
         }, { abortEarly: false });
         if (error) {
+            console.log(error.details);
             return res.status(422).json({ message: "Validation Unsuccessful", status: "error" });
         }
+
+
         // save advert details 
         const result = await AdvertModel.create({
             ...value,
-            // userId: req.auth.id
+            userId: req.auth.id
         })
         return res.status(201).json(result)
     } catch (error) {
@@ -88,7 +91,7 @@ export const updateAdvert = async (req, res) => {
 // PUT/replace advert
 export const replaceAdvert = async (req, res) => {
     try {
-        const { error, value } = advertValidator.validate(req.body, { abortEarly: false })
+        const { error, value } = advertIdValidator.validate(req.params, { abortEarly: false })
         if (error) {
             return res.status(400).json({ message: "Validation Unsuccessful", status: "error" })
         }
