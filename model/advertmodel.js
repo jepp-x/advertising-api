@@ -1,4 +1,4 @@
-import { Schema, model } from "mongoose";
+import { Schema, Types, model } from "mongoose";
 import normalize from "normalize-mongoose"
 
 
@@ -7,10 +7,10 @@ import normalize from "normalize-mongoose"
 const advertSchema = new Schema({
     name: {type: String, required: true, unique: true},
     price: {type: Number, required: true},
-    // pictures: [{type: String, required: true}],
+    pictures: [{type: String, required: true}],
     description: {type: String, required: true},
     quantity: {type: Number, required: true},
-    // userId: {type: Types.ObjectId, required: true, ref: "User"},
+    userId: {type: Types.ObjectId, required: true, ref: "User"},
     isDeleted: { type: Boolean, default: false},
     deletedAt: { type: Date, default: null}
 }, {
