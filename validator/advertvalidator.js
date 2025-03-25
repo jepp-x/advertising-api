@@ -13,7 +13,7 @@ export const updateAdvertValidator = Joi.object({
     price: Joi.number().optional(),
     quantity: Joi.string().optional(),
     description: Joi.string().optional(),
-    // pictures: Joi.array().items(Joi.string()).optional()
+    pictures: Joi.array().items(Joi.string()).optional()
 });
 
 export const advertIdValidator = Joi.object({
