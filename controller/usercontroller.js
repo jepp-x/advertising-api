@@ -82,7 +82,14 @@ export const loginUser = async (req, res) => {
             process.env.JWT_SECRET_KEY, { expiresIn: "24h" }
         );
         // Return response
-        res.status(200).json({ message: 'Login successful', token });
+        res.status(200).json({
+            message: 'Login successful',
+            token,
+            user: {
+                id: user.id,
+                role: user.role
+            }
+        });
     } catch {
         res.status(500).json({ message: 'server error' });
     }
@@ -114,13 +121,13 @@ export const updateUser = async (req, res) => {
             return res.status(404).json({ message: 'User not found' });
         }
         // Return response without password
-        const {password, ...userWithoutPassword} =updatedUser.toObject();
+        const { password, ...userWithoutPassword } = updatedUser.toObject();
         res.status(200).json({
             message: "Update successful",
             data: userWithoutPassword
         }); // This will not return with the password.
     } catch (error) {
-        res.status(500).json({message:'Update User, Server Error'})
+        res.status(500).json({ message: 'Update User, Server Error' })
     }
 }
 
