@@ -12,7 +12,12 @@ const advertSchema = new Schema({
     quantity: {type: Number, required: true},
     userId: {type: Types.ObjectId, required: true, ref: "User"},
     isDeleted: { type: Boolean, default: false},
-    deletedAt: { type: Date, default: null}
+    deletedAt: { type: Date, default: null},
+    category: { 
+        type: String, 
+        enum: [ "fashion and accessories", "beauty products", "kids and toys" ],
+        required: true
+    }
 }, {
     timestamps: true
 });

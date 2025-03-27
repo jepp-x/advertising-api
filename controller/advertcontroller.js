@@ -36,13 +36,19 @@ export const addAdvert = async (req, res) => {
 // GET/view all advert with search and filter 
 export const getAdverts = async (req, res) => {
     try {
-        const { filter = "{}", sort = "{}" } = req.body;
+        const { filter = "{}", sort = "{}" } = req.query;
 
         const result = await AdvertModel
             .find({ ...JSON.parse(filter), isDeleted: false })
             .sort(JSON.parse(sort));
+        if( result.length === 0 ){
+            return res.status(404).json({message: "No adverts found"})
+        }
 
-        res.json(result)
+        res.json({
+            message: "Here are the adverts",
+            data: result
+        })
     } catch (error) {
         return res.json({ message: "Request not successful, kindly refresh your application", status: "error" })
     }
