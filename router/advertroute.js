@@ -1,5 +1,5 @@
 import { Router } from "express";
-import { addAdvert, deleteAdvert, getAdverts, getOneAdvert, permanentlyDeleteAdverts, replaceAdvert, restoreAdverts, updateAdvert, viewDeletedAdverts } from "../controller/advertcontroller.js";
+import { addAdvert, deleteAdvert, getAdverts, getOneAdvert, advertsByUser, permanentlyDeleteAdverts, replaceAdvert, restoreAdverts, updateAdvert, viewDeletedAdverts } from "../controller/advertcontroller.js";
 import { advertPicturesUpload } from "../middleware/upload.js";
 import { isAuthenticated,isAuthorized } from "../middleware/auth.js";
 
@@ -24,11 +24,15 @@ advertRouter.put("/adverts/:id", isAuthenticated,  isAuthorized(["vendor", "admi
 // view all adds
 advertRouter.get("/adverts", getAdverts)
 
+
 //view deleted adds
-advertRouter.get("/adverts-deleted", isAuthenticated, isAuthorized(['vendor', 'admin']), viewDeletedAdverts)
+advertRouter.get("/adverts-deleted/user/:userId", isAuthenticated, isAuthorized(['vendor', 'admin']), viewDeletedAdverts)
 
 // view only one add
 advertRouter.get("/adverts/:id", getOneAdvert)
+
+//view ads by a specific vendor
+advertRouter.get("/adverts/user/:userId", advertsByUser);
 
 // delete adds
 advertRouter.delete("/adverts/:id", isAuthenticated, isAuthorized(['vendor','admin']), deleteAdvert)
